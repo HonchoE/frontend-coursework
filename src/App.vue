@@ -19,7 +19,12 @@ const checkoutForm = ref({
 const isNameValid = ref(false);
 const isPhoneValid = ref(false);
 const showSuccessModal = ref(false);
-const apiBaseUrl = ref('http://localhost:3000/api');
+const defaultApiBaseUrl = import.meta.env.PROD
+  ? 'https://emma-backend-coursework.onrender.com/api'
+  : 'http://localhost:3000/api';
+const apiBaseUrl = ref(
+  import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl
+);
 
 // Computed properties
 const filteredLessons = computed(() => {
@@ -72,6 +77,10 @@ const isCheckoutEnabled = computed(() => {
 async function fetchLessons() {
   try {
     const response = await fetch(`${apiBaseUrl.value}/lessons`);
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
     const data = await response.json();
     lessons.value = data;
   } catch (error) {
@@ -81,7 +90,7 @@ async function fetchLessons() {
 }
 
 function loadMockData() {
-  lessons.value = [
+  const mockLessons = [
     { _id: '1', subject: 'Mathematics', location: 'London', price: 50, spaces: 5, icon: 'fas fa-calculator' },
     { _id: '2', subject: 'English', location: 'Manchester', price: 45, spaces: 5, icon: 'fas fa-book' },
     { _id: '3', subject: 'Science', location: 'Birmingham', price: 55, spaces: 5, icon: 'fas fa-flask' },
@@ -93,6 +102,11 @@ function loadMockData() {
     { _id: '9', subject: 'Coding', location: 'Birmingham', price: 70, spaces: 5, icon: 'fas fa-code' },
     { _id: '10', subject: 'Chess', location: 'London', price: 30, spaces: 5, icon: 'fas fa-chess' },
   ];
+
+  lessons.value = mockLessons.map((lesson) => ({
+    ...lesson,
+    imageUrl: `https://via.placeholder.com/400x250.png?text=${encodeURIComponent(lesson.subject)}`
+  }));
 }
 
 function addToCart(lesson) {
@@ -116,12 +130,13 @@ function removeFromCart(index) {
 
 async function updateLesson(lesson) {
   try {
+    const { _id, imageUrl, ...payload } = lesson;
     await fetch(`${apiBaseUrl.value}/lessons/${lesson._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(lesson)
+      body: JSON.stringify(payload)
     });
   } catch (error) {
     console.error('Error updating lesson:', error);
@@ -155,20 +170,25 @@ async function checkout() {
       },
       body: JSON.stringify(order)
     });
-    
-    if (response.ok) {
-      showSuccessModal.value = true;
-      
-      cart.value = [];
-      checkoutForm.value.name = '';
-      checkoutForm.value.phone = '';
-      isNameValid.value = false;
-      isPhoneValid.value = false;
-      
-      setTimeout(() => {
-        showCart.value = false;
-      }, 2000);
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
     }
+
+    const data = await response.json();
+    console.log(data);
+
+    showSuccessModal.value = true;
+    
+    cart.value = [];
+    checkoutForm.value.name = '';
+    checkoutForm.value.phone = '';
+    isNameValid.value = false;
+    isPhoneValid.value = false;
+    
+    setTimeout(() => {
+      showCart.value = false;
+    }, 2000);
   } catch (error) {
     console.error('Error submitting order:', error);
     alert('There was an error submitting your order. Please try again.');

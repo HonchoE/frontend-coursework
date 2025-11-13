@@ -1,5 +1,8 @@
 <template>
   <div class="lesson-card">
+    <div class="lesson-image">
+      <img :src="imageSrc" :alt="`${lesson.subject} lesson image`" loading="lazy" />
+    </div>
     <div class="lesson-icon">
       <i :class="lesson.icon"></i>
     </div>
@@ -20,7 +23,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
   lesson: {
     type: Object,
     required: true
@@ -28,6 +33,15 @@ defineProps({
 });
 
 defineEmits(['addToCart']);
+
+const imageSrc = computed(() => {
+  if (props.lesson?.imageUrl) {
+    return props.lesson.imageUrl;
+  }
+
+  const subject = props.lesson?.subject || 'Lesson';
+  return `https://via.placeholder.com/400x250.png?text=${encodeURIComponent(subject)}`;
+});
 </script>
 
 <style scoped>
@@ -43,6 +57,20 @@ defineEmits(['addToCart']);
 .lesson-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+.lesson-image {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f1f1f1;
+  margin-bottom: 16px;
+}
+
+.lesson-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .lesson-icon {

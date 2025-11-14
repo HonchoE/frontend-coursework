@@ -6,10 +6,29 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
-const repoRoot = path.resolve(projectRoot, '..');
+const repoRoot = findGitRoot(projectRoot);
 const distDir = path.join(projectRoot, 'dist');
 const worktreeDir = path.join(repoRoot, '.gh-pages-temp');
 const deployBranch = 'gh-pages';
+
+function findGitRoot(startDir) {
+  let currentDir = startDir;
+  const { root } = path.parse(currentDir);
+
+  while (currentDir) {
+    if (existsSync(path.join(currentDir, '.git'))) {
+      return currentDir;
+    }
+
+    if (currentDir === root) {
+      break;
+    }
+
+    currentDir = path.dirname(currentDir);
+  }
+
+  throw new Error('Unable to locate a .git directory. Run this script inside a Git repository.');
+}
 
 function run(command, options = {}) {
   execSync(command, {

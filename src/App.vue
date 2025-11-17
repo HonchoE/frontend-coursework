@@ -20,8 +20,8 @@ const isNameValid = ref(false);
 const isPhoneValid = ref(false);
 const showSuccessModal = ref(false);
 const defaultApiBaseUrl = import.meta.env.PROD
-  ? 'https://emma-backend-coursework.onrender.com/api'
-  : 'http://localhost:3000/api';
+  ? 'https://emma-backend-coursework.onrender.com'
+  : 'http://localhost:3000';
 const apiBaseUrl = ref(
   import.meta.env.VITE_API_BASE_URL || defaultApiBaseUrl
 );

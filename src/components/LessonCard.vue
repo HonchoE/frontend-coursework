@@ -35,10 +35,14 @@ const props = defineProps({
 defineEmits(['addToCart']);
 
 const imageSrc = computed(() => {
-  if (props.lesson?.imageUrl) {
-    return props.lesson.imageUrl;
+  const apiBaseUrl = import.meta.env.PROD
+    ? 'https://emma-backend-coursework.onrender.com'
+    : 'http://localhost:3000';
+  
+  if (props.lesson?.image) {
+    return `${apiBaseUrl}${props.lesson.image}`;
   }
-
+  
   const subject = props.lesson?.subject || 'Lesson';
   return `https://via.placeholder.com/400x250.png?text=${encodeURIComponent(subject)}`;
 });
@@ -47,23 +51,29 @@ const imageSrc = computed(() => {
 <style scoped>
 .lesson-card {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   text-align: center;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
 }
 
 .lesson-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
 .lesson-image {
   width: 100%;
-  height: 160px;
-  border-radius: 8px;
+  height: 180px;
+  border-radius: 12px;
   overflow: hidden;
-  background-color: #f1f1f1;
-  margin-bottom: 16px;
+  background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .lesson-image img {
@@ -100,22 +110,29 @@ const imageSrc = computed(() => {
 
 .lesson-card button {
   width: 100%;
-  padding: 12px;
-  background-color: #4CAF50;
+  padding: 14px;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 25px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+  margin-top: 16px;
 }
 
 .lesson-card button:hover:not(.disabled) {
-  background-color: #45a049;
+  background: linear-gradient(135deg, #45a049, #3d8b40);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4);
 }
 
 .lesson-card button.disabled {
-  background-color: #ccc;
+  background: linear-gradient(135deg, #ccc, #bbb);
   cursor: not-allowed;
+  color: #666;
+  box-shadow: none;
 }
 </style>

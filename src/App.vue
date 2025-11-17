@@ -266,28 +266,37 @@ onMounted(() => {
   align-items: center;
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 3px solid #e0e0e0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .app-header h1 {
   font-size: 2.5rem;
-  color: #333;
+  color: white;
   margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .cart-button {
   padding: 12px 24px;
   font-size: 1.1rem;
-  background-color: #4CAF50;
+  background-color: #ff6b6b;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+  font-weight: 600;
 }
 
 .cart-button:hover {
-  background-color: #45a049;
+  background-color: #ff5252;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
 }
 
 .lessons-grid {

@@ -3,14 +3,11 @@
     <div class="lesson-image">
       <img :src="imageSrc" :alt="`${lesson.subject} lesson image`" loading="lazy" />
     </div>
-    <div class="lesson-icon">
-      <i :class="lesson.icon"></i>
-    </div>
     <h3>{{ lesson.subject }}</h3>
     <div class="lesson-details">
-      <p><i class="fas fa-map-marker-alt"></i> {{ lesson.location }}</p>
-      <p><i class="fas fa-pound-sign"></i> {{ lesson.price }}</p>
-      <p><i class="fas fa-users"></i> {{ lesson.spaces }} spaces</p>
+      <p>📍 {{ lesson.location }}</p>
+      <p>💰 {{ lesson.price }}</p>
+      <p>👥 {{ lesson.spaces }} spaces</p>
     </div>
     <button 
       @click="$emit('addToCart', lesson)"
@@ -83,15 +80,9 @@ const imageSrc = computed(() => {
   display: block;
 }
 
-.lesson-icon {
-  font-size: 3rem;
-  color: #4CAF50;
-  margin-bottom: 16px;
-}
-
 .lesson-card h3 {
   font-size: 1.5rem;
-  margin: 12px 0;
+  margin: 16px 0 12px 0;
   color: #333;
 }
 
